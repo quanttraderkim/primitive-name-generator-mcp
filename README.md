@@ -170,7 +170,7 @@ create_primitive_tribe_story(
 - **Server Name**: `primitive-name-generator`
 - **Entry Point**: `primitive_main.py`
 - **FastMCP Cloud URL**: `https://primitive-name-generator.fastmcp.app/mcp`
-- **GitHub Repository**: `https://github.com/사용자명/primitive-name-generator-mcp`
+- **GitHub Repository**: `https://github.com/quanttraderkim/primitive-name-generator-mcp`
 
 ### MCP 클라이언트 설정
 
