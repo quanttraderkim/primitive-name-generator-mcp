@@ -1,0 +1,20 @@
+{
+  "$schema": "https://gofastmcp.com/schemas/fastmcp_config/v1.json",
+  "entrypoint": {
+    "file": "primitive_main.py",
+    "object": "mcp"
+  },
+  "environment": {
+    "dependencies": [
+      "fastmcp"
+    ]
+  },
+  "deployment": {
+    "platform": "fastmcp-cloud"
+  },
+  "server": {
+    "name": "primitive-name-generator",
+    "description": "구석기 시대로 떠나는 상상의 여행! 원시인 이름을 키워드 기반으로 재미있게 생성하는 MCP 서버입니다.",
+    "version": "1.0.0"
+  }
+}
