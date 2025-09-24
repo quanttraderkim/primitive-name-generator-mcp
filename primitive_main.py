@@ -316,6 +316,148 @@ def suggest_primitive_keywords() -> dict:
     }
 
 @mcp.tool
+def convert_korean_name_to_primitive(korean_name: str, style: Optional[str] = "funny") -> dict:
+    """
+    한국어 이름을 재미있는 원시인 이름으로 변환합니다.
+    
+    Args:
+        korean_name: 변환할 한국어 이름 (예: "김철수", "박영희")
+        style: 변환 스타일 ("funny", "caveman", "hunter", "shaman")
+        
+    Returns:
+        dict: 변환된 원시인 이름과 설명
+    """
+    
+    # 한글 이름 요소별 원시인 변환 사전
+    name_conversion_dict = {
+        # 성씨 변환
+        "김": "우가", "이": "그르", "박": "뭉가", "최": "돌록", "정": "쿵쾅", 
+        "강": "으악", "조": "와우", "윤": "호호", "장": "쪼끔", "임": "털털",
+        "한": "춥춥", "오": "오잉", "서": "바람", "신": "번개", "권": "주먹",
+        "황": "노랑", "안": "안전", "송": "나무", "전": "벼락", "홍": "빨강",
+        "문": "열어", "양": "많이", "손": "손가락", "배": "배불러", "백": "하얀",
+        "허": "허걱", "유": "흘러", "남": "남쪽", "심": "깊어", "노": "늙은",
+        "하": "아래", "곽": "꽉꽉", "성": "높이", "차": "쌩쌩", "주": "빨간",
+        
+        # 이름 요소 변환 - 남성형
+        "철": "쇠돌", "수": "물", "민": "빠른", "준": "높은", "호": "큰",
+        "진": "진짜", "현": "현명", "우": "비", "성": "별", "영": "영원",
+        "석": "바위", "용": "드래곤", "태": "크다", "건": "튼튼", "혁": "가죽",
+        "동": "움직여", "규": "둥근", "완": "완전", "식": "먹어", "근": "힘센",
+        "배": "배고픈", "원": "둥글", "창": "창던져", "환": "환한", "섭": "잡아",
+        
+        # 이름 요소 변환 - 여성형  
+        "영": "반짝", "희": "기뻐", "미": "예뻐", "연": "연하", "정": "조용",
+        "은": "은빛", "주": "구슬", "애": "사랑", "혜": "똑똑", "선": "착한",
+        "숙": "조용조용", "옥": "옥구슬", "순": "순한", "자": "자다", "란": "난초",
+        "화": "꽃", "경": "경치", "인": "사람", "숙": "숙녀", "윤": "윤기",
+        "서": "시원", "하": "하하", "민": "민첩", "지": "지혜", "현": "현명현명",
+        "유": "흘러흘러", "나": "나야", "리": "리듬", "아": "아기", "혜": "혜자",
+        
+        # 특수 조합 (성+이름 첫글자 조합)
+        "김철": "우가쇠", "김영": "우가반짝", "이민": "그르빠른", "박수": "뭉가물",
+        "최진": "돌록진짜", "정호": "쿵쾅큰", "강동": "으악움직", "조현": "와우현명",
+        
+        # 자주 나오는 이름들
+        "철수": "쇠돌-물먹", "영희": "반짝-기뻐", "민수": "빠른-물", "영수": "반짝-물",
+        "순이": "순한-순이", "말순": "말하-순이", "갑순": "갑작-순이", "봉순": "봉긋-순이"
+    }
+    
+    # 의성어/의태어 리스트
+    primitive_sounds = {
+        "funny": ["꺄르르", "우걱우걱", "쿵덕쿵덕", "왈왈", "멍멍", "꽥꽥", "삐뽀삐뽀"],
+        "caveman": ["우가", "그르", "쿵쾅", "으악", "끄응", "허걱"],
+        "hunter": ["휘둘", "창질", "으르릉", "쌩쌩", "쿡쿡", "찍찍"],
+        "shaman": ["웅웅", "신비", "마법", "으음", "오묘", "후후"]
+    }
+    
+    # 이름 분석
+    if len(korean_name) >= 3:
+        family_name = korean_name[0]  # 성
+        given_name = korean_name[1:]  # 이름
+    elif len(korean_name) == 2:
+        family_name = korean_name[0]
+        given_name = korean_name[1]
+    else:
+        family_name = ""
+        given_name = korean_name
+    
+    # 변환 작업
+    primitive_parts = []
+    
+    # 성씨 변환
+    if family_name in name_conversion_dict:
+        primitive_family = name_conversion_dict[family_name]
+    else:
+        primitive_family = random.choice(["우가", "그르", "뭉가", "돌록", "쿵쾅"])
+    
+    # 이름 변환 - 전체 이름이 사전에 있는지 먼저 확인
+    full_given = korean_name[1:] if len(korean_name) > 1 else korean_name
+    if full_given in name_conversion_dict:
+        primitive_given = name_conversion_dict[full_given]
+    else:
+        # 글자별로 변환
+        primitive_given_parts = []
+        for char in given_name:
+            if char in name_conversion_dict:
+                primitive_given_parts.append(name_conversion_dict[char])
+            else:
+                # 사전에 없으면 랜덤 원시 요소 사용
+                random_elements = ["불꽃", "바위", "물", "나무", "바람", "털털", "동그란", "길쭉"]
+                primitive_given_parts.append(random.choice(random_elements))
+        primitive_given = "-".join(primitive_given_parts)
+    
+    # 스타일에 따른 최종 조합
+    sound_element = random.choice(primitive_sounds[style])
+    
+    if style == "funny":
+        # 재미있는 스타일: [성씨]-[의성어]-[이름]-보
+        primitive_name = f"{primitive_family}-{sound_element}-{primitive_given}-보"
+        role = "부족 개그맨"
+        
+    elif style == "caveman":
+        # 동굴인 스타일: [성씨]-[이름]-이
+        primitive_name = f"{primitive_family}-{primitive_given}-이"
+        role = "동굴거주자"
+        
+    elif style == "hunter":
+        # 사냥꾼 스타일: [성씨]-[이름]-사냥꾼
+        primitive_name = f"{primitive_family}-{primitive_given}-사냥꾼"
+        role = "부족 사냥꾼"
+        
+    else:  # shaman
+        # 주술사 스타일: [성씨]-[이름]-예언자  
+        primitive_name = f"{primitive_family}-{primitive_given}-{sound_element}"
+        role = "부족 주술사"
+    
+    # 변환 설명 생성
+    conversion_explanation = f"'{korean_name}'을(를) 원시인 언어로 번역하면:"
+    if family_name:
+        conversion_explanation += f"\n• {family_name}씨 → {primitive_family}족"
+    conversion_explanation += f"\n• {given_name} → {primitive_given.replace('-', ' + ')}"
+    conversion_explanation += f"\n• 최종 결과: {primitive_name}"
+    
+    # 부족과 특성 랜덤 배정
+    tribe = random.choice(TRIBE_NAMES)
+    special_ability = random.choice([
+        "불 피우기 달인", "돌 던지기 챔피언", "열매 찾기 전문가", 
+        "동굴 그림 화가", "맘모스 추적자", "부족 춤꾼", "이야기꾼"
+    ])
+    
+    return {
+        "original_name": korean_name,
+        "primitive_name": primitive_name,
+        "conversion_explanation": conversion_explanation,
+        "tribe": tribe,
+        "role": role,
+        "special_ability": special_ability,
+        "style": style,
+        "era": "구석기 시대",
+        "greeting": f"우가우가! 나는 {primitive_name}이다!",
+        "fun_fact": f"{korean_name}님이 4만년 전에 살았다면 이런 이름을 가졌을 거예요!"
+    }
+
+@mcp.tool
 def create_primitive_tribe_story(tribe_name: str, member_names: List[str]) -> dict:
     """
     원시인 부족과 구성원들로 재미있는 부족 이야기를 만들어줍니다.
@@ -391,3 +533,5 @@ def create_primitive_tribe_story(tribe_name: str, member_names: List[str]) -> di
 
 if __name__ == "__main__":
     mcp.run()
+
+    
